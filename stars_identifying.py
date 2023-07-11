@@ -10,7 +10,7 @@ def star_centroids(data):
     centroids=[[],[]] #x and y coordinates of the centroids of stars in the image
     FWHM=0 # Full width Half maximum, the radius around centroid at which intensity roughly halves
     # Insert code for finding centroid and FWHM
-    centroids=centroid_2dg(data)
+    centroids=centroid_2dg(data)  #Calculates the centroid by fitting a 2D Gaussian to the 2D distribution of the data
     return (centroids,FWHM)
 
 # displaying the location of stars
