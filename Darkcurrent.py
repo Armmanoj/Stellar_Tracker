@@ -62,11 +62,12 @@ class imagestream:
             
 
 # The code below analyzes the dark frame
-image=["IMG_32{}.CR2".format(i) for i in (22,23,25,27)]
+image=["IMG_32{}.CR2".format(i) for i in (22,23,25,27)]+["IMG_35{}.CR2".format(i) for i in range(88,95)]#+["IMG_360{}.CR2".format(i) for i in (0,1,3,4,5)]
 img=imagestream(image)
-limtimelist=np.array([5,10,15,20]) # list of input brightness
+limtimelist=np.array([5,10,15,20]+[6,8,10,13,15,2.5,13])#,20,25,32,35])#+[40,45,50,67,60]) # list of input brightness
 blackchannel=2048
 variances=[]
+means=[]
 clipped_img=np.zeros((4022,6024),dtype=np.uint16)
 for i in range(len(img.img_name)):
     img.load(i)
@@ -75,6 +76,7 @@ for i in range(len(img.img_name)):
     hist, bins = np.histogram(arr_clipped, bins=2000, range=(1000,3000)) # histogram is made only of pixels in this range to avoid outliers
     pix_count=0
     variance=0
+    mean=0
     for i in range(1000,3000):
         pix_count+=hist[i-1000]
         variance+=hist[i-1000]*(blackchannel-i)**2
@@ -87,7 +89,7 @@ for i in range(len(img.img_name)):
 # Plotting variance and doing regression analysis
 print("variances= ",variances)
 slope, intercept, r_value, p_value, std_err = stats.linregress(limtimelist,variances)
-print("Readnoise= ",int(np.sqrt(intercept)),"\nDark Current= ",slope//5,"+-",int(std_err),"\nr_value= ",r_value,"\np_value= ",p_value,)
+print("Readnoise= ",int(np.sqrt(intercept)),"\nDark Current= ",slope,"+-",int(std_err),"\nr_value= ",r_value,"\np_value= ",p_value,)
 plt.scatter(limtimelist,variances)
 plt.plot([0,35],[intercept, intercept+35*slope])
 plt.show()
@@ -106,11 +108,10 @@ plt.scatter(hot_pix[0,:],hot_pix[1,:],color='red')
 plt.show()
 
 """Printed output is-
-variances=  [7145.496550966695, 10454.222334761733, 13839.93581797458, 17028.95323954472]
-Readnoise=  62 
-Dark Current=  132 +- 5
-r_value=  0.9999328656724058 
-p_value=  6.713432759419827e-05
+Readnoise=  55-62 
+Dark Current=  714 +- 79
+r_value=  0.948
+p_value=  8.89e-06
 """
 
 """
@@ -118,6 +119,8 @@ Sources of error-
 1. It is unclear what algorithm has been used by Canon to modify frames in camera. The histogram of the
 dark frames needs to be studied more carefully for any statistical anomalies, and if the dark frame was really just
 shifted to a different mean.
-2. On including images 5 and 6, the error in dark current increases 8 times, this may be due to nonlinearity, camera algorithm etc
+2. On including more frames, the dark current reduces toward 614, implying as the sensor fills with dark signal, the process
+   does not remain poissonian, at around 30 second, the dark signal approaches saturation, the variace of the dark signal
+   decreases from 50 seconds onwards. 
 3. Temperature may fluctuate while taking frames
 """
