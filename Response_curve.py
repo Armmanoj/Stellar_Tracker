@@ -76,37 +76,7 @@ print(100*np.std(RbyG),100*np.std(RbyB))
 plt.plot(xlist,regb[0],'ro')
 plt.plot(xlist,regb[1],'go')
 plt.plot(xlist,regb[2],'bo')
+plt.xlabel("Input intensity")
+plt.ylabel("Recorded intensity")
 plt.show()
 
-
-
-
-"""
-with rawpy.imread("IMG_2848.CR2") as raw:
-            raw_data=(np.array(raw.postprocess(gamma=(1,1),no_auto_bright=True,output_bps=16)).astype(np.float64))/2**16 #we take rgb values as fraction of max value
-            mean=meannp(raw_data)
-            std=stdnp(raw_data)
-            print(mean[0])
-            print(mean[1])
-            print(mean[2])
-            print(std[0])
-            print(std[1])
-            print(std[2])
-            # 0.64,0.20,0.34 % of full value is as bias current std
-            # 0.49, 0.11, 0.28 is mean of bias
-"""
-
-"""
-with rawpy.imread("IMG_2827.CR2") as raw:
-            raw_data=(np.array(raw.postprocess(gamma=(1,1),no_auto_bright=True,output_bps=16)).astype(np.float64))/2**16 #we take rgb values as fraction of max value
-            mean=meannp(raw_data)
-            std=stdnp(raw_data)
-            print(mean[0])
-            print(mean[1])
-            print(mean[2])
-            print(std[0])
-            print(std[1])
-            print(std[2])
-            # 0.64,0.20,0.34 % of full value is as bias current std
-            # 0.49, 0.11, 0.28 is mean of bias
-"""
