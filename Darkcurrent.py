@@ -89,9 +89,12 @@ for i in range(len(img.img_name)):
 # Plotting variance and doing regression analysis
 print("variances= ",variances)
 slope, intercept, r_value, p_value, std_err = stats.linregress(limtimelist,variances)
-print("Readnoise= ",int(np.sqrt(intercept)),"\nDark Current= ",slope,"+-",int(std_err),"\nr_value= ",r_value,"\np_value= ",p_value,)
+print("Readnoise= ",int(np.sqrt(intercept)),"\nDark Current= ",int(slope)+1,"+-",int(std_err),"\nr_value= ",r_value,"\np_value= ",p_value,)
 plt.scatter(limtimelist,variances)
 plt.plot([0,35],[intercept, intercept+35*slope])
+plt.title("Graph for dark current determination")
+plt.xlabel("Exposure time(s)")
+plt.ylabel("Variance")
 plt.show()
 
 
@@ -120,7 +123,16 @@ Sources of error-
 dark frames needs to be studied more carefully for any statistical anomalies, and if the dark frame was really just
 shifted to a different mean.
 2. On including more frames, the dark current reduces toward 614, implying as the sensor fills with dark signal, the process
-   does not remain poissonian, at around 30 second, the dark signal approaches saturation, the variace of the dark signal
+   does not remain poissonian, at around 30 second, the dark signal approaches saturation, the variace of the dark signal infact
    decreases from 50 seconds onwards. 
 3. Temperature may fluctuate while taking frames
+"""
+
+"""
+Gain-
+From this website, https://www.photonstophotos.net/Charts/Measured_ISO.htm, CANON EOS760D has native ISO 112.
+        As d(variance in dark frame)/dt=(Gain^2)*dark current, dark current in e-/p/s is the recorded slope (714+-79) divided by the gain,
+        At ISO 112 (native ISO), gain is 1, at ISO 6400, gain is 6400/112=57.14.
+        Hence, dark current is 0.219 +- 0.024 e-/p/s. This is comparable to a good quality CMOS sensor. In comparison, orion g3, a cheap astronomical
+        imaging ccd achieves 0.01 e-/p/s, 1 e-/p/hour is achievable by LN2 cooled professional cameras.  
 """
